@@ -2,10 +2,19 @@
   "name": "pre-commit-license-check-node",
   "version": "0.0.0",
   "description": "A pre-commit license checker for node-based projects",
-  "main": "index.js",
+  "bin": {
+    "license-check": "index.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Nicolas Byl <nico@nicolas-byl.eu>",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.3"
+  }
 }
