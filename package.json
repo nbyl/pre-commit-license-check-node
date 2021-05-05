@@ -1,0 +1,11 @@
+{
+  "name": "pre-commit-license-check-node",
+  "version": "0.0.0",
+  "description": "A pre-commit license checker for node-based projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
