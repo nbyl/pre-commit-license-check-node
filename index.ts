@@ -84,7 +84,7 @@ async function checkLicenses(packageFile: string): Promise<boolean> {
   return true;
 }
 
-function showErrorMessage(directory: string, forbiddenLicenses: string[]) {
+export function showErrorMessage(directory: string, forbiddenLicenses: string[]) {
   let demoConfiguration: Configuration = { allowedLicenses: forbiddenLicenses };
 
   console.log("**************************************************************");
