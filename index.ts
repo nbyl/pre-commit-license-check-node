@@ -3,10 +3,12 @@
 "use strict";
 
 import { exec } from "child_process";
-import { existsSync } from "fs";
+import { existsSync, readFile } from "fs";
 import neatCsv from "neat-csv";
 import path from "path";
-import { config } from "process";
+import { debuglog } from "util";
+
+const debug = debuglog("app");
 
 interface Configuration {
   allowedLicenses: string[];
@@ -18,6 +20,7 @@ function loadConfiguration(directory: string): Promise<Configuration> {
   let configFileName = path.join(directory, CONFIG_FILE_NAME);
 
   if (!existsSync(configFileName)) {
+    debug("No file found, using default configuration.");
     return new Promise((resolve) => {
       resolve({
         allowedLicenses: [],
@@ -25,7 +28,18 @@ function loadConfiguration(directory: string): Promise<Configuration> {
     });
   }
 
-  // TODO: load from json
+  return new Promise((resolve, reject) => {
+    readFile(configFileName, (err, data) => {
+      if (err) {
+        reject(err);
+      }
+
+      let jsonData = JSON.parse(data.toString());
+      resolve({
+        allowedLicenses: jsonData.allowedLicenses,
+      });
+    });
+  });
 }
 
 function extractUsedLicenses(directory: string): Promise<string> {
@@ -34,12 +48,15 @@ function extractUsedLicenses(directory: string): Promise<string> {
       path.dirname(process.argv[1]) +
       "/node_modules/.bin/license-checker --csv";
 
-    //console.log(command);
+    debug("Running license checker command: " + command);
 
-    exec(command, { cwd: directory }, (error, stdout) => {
+    exec(command, { cwd: directory }, (error, stdout, stderr) => {
       if (error) {
         reject(error);
       }
+
+      debug("license checker stdout: " + stdout);
+      debug("license checker stderr: " + stderr);
 
       resolve(stdout);
     });
@@ -66,7 +83,7 @@ async function extractForbiddenLicenses(
 
 async function checkLicenses(packageFile: string): Promise<boolean> {
   let directory = path.dirname(packageFile);
-  console.log("Scanning licenses for " + directory);
+  debug("Scanning licenses for " + directory);
 
   let configuration = await loadConfiguration(directory);
   let licenseOutput = await extractUsedLicenses(directory);
@@ -84,7 +101,10 @@ async function checkLicenses(packageFile: string): Promise<boolean> {
   return true;
 }
 
-export function showErrorMessage(directory: string, forbiddenLicenses: string[]) {
+export function showErrorMessage(
+  directory: string,
+  forbiddenLicenses: string[]
+) {
   let demoConfiguration: Configuration = { allowedLicenses: forbiddenLicenses };
 
   console.log("**************************************************************");
