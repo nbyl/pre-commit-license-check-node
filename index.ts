@@ -10,13 +10,13 @@ import { debuglog } from "util";
 
 const debug = debuglog("app");
 
-interface Configuration {
+export interface Configuration {
   allowedLicenses: string[];
 }
 
-const CONFIG_FILE_NAME = ".license-check-node.json";
+export const CONFIG_FILE_NAME = ".license-check-node.json";
 
-function loadConfiguration(directory: string): Promise<Configuration> {
+export function loadConfiguration(directory: string): Promise<Configuration> {
   let configFileName = path.join(directory, CONFIG_FILE_NAME);
 
   if (!existsSync(configFileName)) {
