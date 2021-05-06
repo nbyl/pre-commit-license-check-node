@@ -1,0 +1,7 @@
+-   id: license-check
+    name: Check the licenses node.js.
+    description: This hook scans the local Pipfile against a configured list of allowed open source licenses.
+    entry: license-check
+    files: package.json
+    language: node
+    additional_dependencies: [ts-node]
