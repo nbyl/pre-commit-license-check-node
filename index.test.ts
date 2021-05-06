@@ -21,7 +21,7 @@ test("loadConfiguration() should return empty config by default", () => {
 });
 
 test("loadConfiguration() should return config if file exists", () => {
-  mkdtemp("tests-", (err, directory) => {
+  mkdtemp("./tests/tests-", (err, directory) => {
     expect(err).toBeNull();
 
     let demoConfiguration: Configuration = { allowedLicenses: ["MIT", "GPL"] };
